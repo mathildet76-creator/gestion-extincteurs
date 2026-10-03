@@ -11,8 +11,8 @@ st.set_page_config(
 )
 
 # VOS IMAGES (Modifiez les liens si vous le souhaitez)
-URL_LOGO = ""
-URL_FOND = ""
+URL_LOGO = "https://www.centre-formation-securite.fr/wp-content/uploads/2018/11/logo-si2p-fond-clair.png"
+URL_FOND = "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fozdistra.tn%2Fextincteur%2Fextincteur-co2-2kg-ce-229.html&opi=89978449"
 
 st.markdown(
     f"""
