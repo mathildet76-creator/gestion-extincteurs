@@ -4,26 +4,42 @@ import requests
 import streamlit as st
 from streamlit_qrcode_scanner import qrcode_scanner
 
+# 1. METTEZ VOS LIENS ICI (laissez vide "" si vous n'avez pas l'un ou l'autre)
+URL_LOGO = "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww.centre-formation-securite.fr%2F&ved=0CBcQjRxqFwoTCIij3a_JnpcDFQAAAAAdAAAAABAK&opi=89978449"
+URL_FOND = "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fozdistra.tn%2Fextincteur%2Fextincteur-co2-2kg-ce-229.html&ved=0CBcQjRxqGAoTCMjau8nJnpcDFQAAAAAdAAAAABC3AQ&opi=89978449"
+
 # METTEZ ICI L'URL DE VOTRE APPLICATION WEB GOOGLE APPS SCRIPT :
 APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjkfo7EsTGkc-CgWjRgNyZDxMnFeZewu3x0YNLGv0iGQI1siHMwFkZErAKmGkv-2nG/exec"
+
 st.set_page_config(
     page_title="Gestion Extincteurs", page_icon="🧯", layout="centered"
 )
 
+# 2. APPLICATION DU STYLE (IMAGE DE FOND ET BOUTONS)
 st.markdown(
-    """
+    f"""
     <style>
-    .stButton>button {
+    .stApp {{
+        background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("{URL_FOND}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }}
+    .stButton>button {{
         width: 100%;
         height: 3em;
         font-size: 18px;
         font-weight: bold;
         border-radius: 10px;
-    }
+    }}
     </style>
 """,
     unsafe_allow_html=True,
 )
+
+# 3. AFFICHAGE DU LOGO DANS LA BARRE LATÉRALE (optionnel)
+if URL_LOGO:
+  st.sidebar.image(URL_LOGO, use_container_width=True)
 
 
 def get_data():
