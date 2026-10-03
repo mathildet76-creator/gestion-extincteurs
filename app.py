@@ -5,8 +5,8 @@ import streamlit as st
 from streamlit_qrcode_scanner import qrcode_scanner
 
 # 1. METTEZ VOS LIENS ICI (laissez vide "" si vous n'avez pas l'un ou l'autre)
-URL_LOGO = "https://www.google.com/imgres?q=logo%20SI2P%20normandie&imgurl=https%3A%2F%2Fmedia.licdn.com%2Fdms%2Fimage%2Fv2%2FC4D0BAQE0nv_-BSrbeg%2Fcompany-logo_200_200%2Fcompany-logo_200_200%2F0%2F1630554654853%2Fsi2p_logo%3Fe%3D2147483647%26v%3Dbeta%26t%3DDhI1piKe4kAF-SLWOveCyeOPptA6YqDYHyc0LInWIu0&imgrefurl=https%3A%2F%2Fke.linkedin.com%2Fcompany%2Fsi2p&docid=-8H1BSUZY6hJdM&tbnid=PygHN-76uhZt8M&vet=12ahUKEwjE-Puey56XAxV_UaQEHebfIEcQnPAOegUImgEQAA..i&w=200&h=200&hcb=2&itg=1&ved=2ahUKEwjE-Puey56XAxV_UaQEHebfIEcQnPAOegUImgEQAA"
-URL_FOND = "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fozdistra.tn%2Fextincteur%2Fextincteur-co2-2kg-ce-229.html&ved=0CBcQjRxqGAoTCMjau8nJnpcDFQAAAAAdAAAAABC3AQ&opi=89978449"
+URL_LOGO = "https://www.centre-formation-securite.fr/wp-content/uploads/2018/11/logo-si2p-fond-clair.png"
+URL_FOND = "https://ozdistra.tn/2335-extra_large_default/extincteur-co2-2kg-ce.jpg"
 
 # METTEZ ICI L'URL DE VOTRE APPLICATION WEB GOOGLE APPS SCRIPT :
 APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjkfo7EsTGkc-CgWjRgNyZDxMnFeZewu3x0YNLGv0iGQI1siHMwFkZErAKmGkv-2nG/exec"
