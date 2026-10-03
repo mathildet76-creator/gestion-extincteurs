@@ -107,7 +107,7 @@ else:
   if str(user["Role"]).strip().lower() == "formateur":
     st.title("🧯 Mode Formateur")
     st.write(
-        "Scannez le QR code de l'extincteur (Plein ➔ En formation ➔ Vide)."
+        "Scannez le QR code de l'extincteur."
     )
 
     id_scanne = qrcode_scanner(key="scanner_formateur")
