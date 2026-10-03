@@ -5,7 +5,7 @@ import streamlit as st
 from streamlit_qrcode_scanner import qrcode_scanner
 
 # 1. METTEZ VOS LIENS ICI (laissez vide "" si vous n'avez pas l'un ou l'autre)
-URL_LOGO = "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww.centre-formation-securite.fr%2F&ved=0CBcQjRxqFwoTCIij3a_JnpcDFQAAAAAdAAAAABAK&opi=89978449"
+URL_LOGO = "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww.centre-formation-securite.fr%2Fsi2p-idf-est%2F&ved=0CBcQjRxqFwoTCNDh34PLnpcDFQAAAAAdAAAAABAF&opi=89978449"
 URL_FOND = "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fozdistra.tn%2Fextincteur%2Fextincteur-co2-2kg-ce-229.html&ved=0CBcQjRxqGAoTCMjau8nJnpcDFQAAAAAdAAAAABC3AQ&opi=89978449"
 
 # METTEZ ICI L'URL DE VOTRE APPLICATION WEB GOOGLE APPS SCRIPT :
