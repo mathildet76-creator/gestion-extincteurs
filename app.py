@@ -76,7 +76,7 @@ if "user" not in st.session_state:
 
 # AUTHENTIFICATION
 if st.session_state.user is None:
-  st.image("https://www.smsp.fr/media/image/b1/e8/aa4ba6093d62b1a5a780a7f25e13.jpg")
+  st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgi9peMxjPgEpbUU1SHhUBqaJa_GjKOId_5oPXARaqJw&s=10")
   st.title("Connexion")
   code_saisi = st.text_input("Code d'accès", type="password")
 
