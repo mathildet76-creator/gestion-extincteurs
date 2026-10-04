@@ -30,7 +30,7 @@ st.markdown(
         height: 3em;
         font-size: 18px;
         font-weight: bold;
-        border-radius: 10px;
+        border-radius: 15px;
     }}
     </style>
 """,
@@ -105,7 +105,7 @@ else:
 
   # FORMATEUR
   if str(user["Role"]).strip().lower() == "formateur":
-    st.title("🧯 Mode Formateur")
+    st.title("🧯 Formateur")
     st.write(
         "Scannez le QR code de l'extincteur."
     )
@@ -141,7 +141,7 @@ else:
 
   # PRESTATAIRE
   elif str(user["Role"]).strip().lower() == "prestataire":
-    st.title("🚚 Mode Prestataire")
+    st.title("🚚 Prestataire")
     choix_action = st.radio(
         "Action :",
         (
