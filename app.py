@@ -28,7 +28,7 @@ st.markdown(
     .stButton>button {{
         width: 100%;
         height: 3em;
-        font-size: 18px;
+        font-size: 25px;
         font-weight: bold;
         border-radius: 15px;
     }}
