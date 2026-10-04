@@ -76,7 +76,8 @@ if "user" not in st.session_state:
 
 # AUTHENTIFICATION
 if st.session_state.user is None:
-  st.title("🧯 Connexion")
+  st.image("https://img.icons8.com/stickers/1200/fire-extinguisher.jpg")
+  st.title("Connexion")
   code_saisi = st.text_input("Code d'accès", type="password")
 
   if st.button("Se connecter"):
