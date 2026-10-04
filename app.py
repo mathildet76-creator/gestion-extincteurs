@@ -12,7 +12,7 @@ URL_FOND = "https://www.centre-formation-securite.fr/wp-content/uploads/triangle
 APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjkfo7EsTGkc-CgWjRgNyZDxMnFeZewu3x0YNLGv0iGQI1siHMwFkZErAKmGkv-2nG/exec"
 
 st.set_page_config(
-    page_title="Gestion Extincteurs", page_icon="🧯", layout="centered"
+    page_title="Gestion Extincteurs", page_icon="https://img.icons8.com/stickers/1200/fire-extinguisher.jpg", layout="centered"
 )
 
 # 2. APPLICATION DU STYLE (IMAGE DE FOND ET BOUTONS)
