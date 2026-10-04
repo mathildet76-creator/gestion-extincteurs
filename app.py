@@ -142,7 +142,8 @@ else:
 
   # PRESTATAIRE
   elif str(user["Role"]).strip().lower() == "prestataire":
-    st.title("🚚 Prestataire")
+    st.image("https://png.pngtree.com/png-clipart/20190116/ourmid/pngtree-fire-extinguisher-portable-fire-extinguishing-tool-fire-prevention-facility-png-image_394189.jpg")
+    st.title("Prestataire")
     choix_action = st.radio(
         "Action :",
         (
