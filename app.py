@@ -142,7 +142,8 @@ else:
 
   # PRESTATAIRE
   elif str(user["Role"]).strip().lower() == "prestataire":
-    st.image("https://png.pngtree.com/png-clipart/20190116/ourmid/pngtree-fire-extinguisher-portable-fire-extinguishing-tool-fire-prevention-facility-png-image_394189.jpg")
+    st.image("https://static.vecteezy.com/ti/vecteur-libre/p1/18765560-icone-d-expedition-rapide-dans-le-style-comique-illustration-de-vecteur-de-dessin-anime-de-camion-de-livraison-sur-fond-isole-exprimer-le-concept-d-entreprise-de-signe-d-effet-d-eclaboussure-logistique-vectoriel.jpg
+")
     st.title("Prestataire")
     choix_action = st.radio(
         "Action :",
