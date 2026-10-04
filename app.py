@@ -76,7 +76,7 @@ if "user" not in st.session_state:
 
 # AUTHENTIFICATION
 if st.session_state.user is None:
-  st.image("https://img.icons8.com/stickers/1200/fire-extinguisher.jpg")
+  st.image("https://raja.scene7.com/is/image/Raja/products/panneau-logo-extincteur-20-x-20-cm-polystyr-antichoc_361790.jpg?template=TemplatePictoImage&$ImageMain=BER_361790&$PictoRight=NoPicto&$PictoLeft=NoPicto&resMode=sharp2&op_usm=1.75,0.3,2,0")
   st.title("Connexion")
   code_saisi = st.text_input("Code d'accès", type="password")
 
