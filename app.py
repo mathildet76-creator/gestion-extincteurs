@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 import requests
 import streamlit as st
@@ -15,38 +15,25 @@ st.set_page_config(
     page_title="Gestion Extincteurs", page_icon="https://img.icons8.com/stickers/1200/fire-extinguisher.jpg", layout="centered"
 )
 
-# 2. APPLICATION DU STYLE (IMAGE DE FOND ET BOUTONS)
+# STYLE GLOBAL & TAILLE DES ÉCRITURES
 st.markdown(
-    f"""
+    """
     <style>
-    .stApp {{
-        background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("{URL_FOND}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }}
-    .stButton>button {{
-        width: 100%;
-        height: 3em;
-        font-size: 25px;
-        font-weight: bold;
-        border-radius: 15px;
-    }}
+    html, body, [class*="css"] { font-size: 18px; }
+    .stButton>button { width: 100%; height: 3.5em; font-size: 20px; font-weight: bold; border-radius: 10px; }
+    h1 { font-size: 32px !important; }
+    h2 { font-size: 26px !important; }
+    h3 { font-size: 22px !important; }
     </style>
 """,
     unsafe_allow_html=True,
 )
-
-# 3. AFFICHAGE DU LOGO DANS LA BARRE LATÉRALE (optionnel)
-if URL_LOGO:
-  st.sidebar.image(URL_LOGO, use_container_width=True)
 
 
 def get_data():
   try:
     response = requests.get(APPS_SCRIPT_URL + "?action=getData")
     data = response.json()
-    # Conversion des tableaux Google Sheets en DataFrames Pandas
     df_ext = pd.DataFrame(data["extincteurs"][1:], columns=data["extincteurs"][0])
     df_users = pd.DataFrame(
         data["utilisateurs"][1:], columns=data["utilisateurs"][0]
@@ -71,34 +58,93 @@ def update_sheet(id_ext, statut, utilisateur, date):
     st.error(f"Erreur lors de la mise à jour : {e}")
 
 
+def update_batch(quantite, utilisateur, date):
+  try:
+    params = {
+        "action": "updateBatch",
+        "quantite": quantite,
+        "utilisateur": utilisateur,
+        "date": date,
+    }
+    response = requests.get(APPS_SCRIPT_URL, params=params)
+    return response.json()
+  except Exception as e:
+    st.error(f"Erreur lors de la validation du lot : {e}")
+    return None
+
+
+# --- GESTION DES ÉTATS GLOBAUX ---
 if "user" not in st.session_state:
   st.session_state.user = None
+if "last_activity" not in st.session_state:
+  st.session_state.last_activity = datetime.now()
 
-# AUTHENTIFICATION
+# Registre global partagé pour empêcher les doubles connexions d'un même code
+if "active_codes" not in st.session_state:
+  st.session_state.active_codes = []
+
+# --- VÉRIFICATION DE L'INACTIVITÉ (5 minutes) ---
+INACTIVITY_LIMIT = timedelta(minutes=5)
+if st.session_state.user is not None:
+  if datetime.now() - st.session_state.last_activity > INACTIVITY_LIMIT:
+    # Libérer le code de la liste des actifs
+    code_actuel = str(st.session_state.user.get("Code"))
+    if code_actuel in st.session_state.active_codes:
+      st.session_state.active_codes.remove(code_actuel)
+
+    st.session_state.user = None
+    st.warning(
+        "⏳ Session expirée suite à 5 minutes d'inactivité. Veuillez vous"
+        " reconnecter."
+    )
+    st.rerun()
+  else:
+    # Met à jour l'heure de la dernière activité à chaque interaction
+    st.session_state.last_activity = datetime.now()
+
+
+# --- AUTHENTIFICATION ---
 if st.session_state.user is None:
   st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgi9peMxjPgEpbUU1SHhUBqaJa_GjKOId_5oPXARaqJw&s=10")
-  st.title("Connexion")
+  st.title("🧯 Connexion")
   code_saisi = st.text_input("Code d'accès", type="password")
 
   if st.button("Se connecter"):
-    _, df_users = get_data()
-    if df_users is not None:
-      user_found = df_users[df_users["Code"].astype(str) == str(code_saisi)]
-      if not user_found.empty:
-        st.session_state.user = user_found.iloc[0].to_dict()
-        st.rerun()
-      else:
-        st.error("Code d'accès incorrect.")
+    if not code_saisi:
+      st.error("Veuillez saisir un code.")
+    elif str(code_saisi) in st.session_state.active_codes:
+      st.error(
+          "⚠️ Ce compte est déjà connecté sur un autre appareil ou une autre"
+          " fenêtre !"
+      )
     else:
-      st.error("Impossible de récupérer les utilisateurs.")
+      _, df_users = get_data()
+      if df_users is not None:
+        user_found = df_users[df_users["Code"].astype(str) == str(code_saisi)]
+        if not user_found.empty:
+          user_dict = user_found.iloc[0].to_dict()
+          # Enregistre l'utilisateur et bloque son code
+          st.session_state.user = user_dict
+          st.session_state.active_codes.append(str(code_saisi))
+          st.session_state.last_activity = datetime.now()
+          st.rerun()
+        else:
+          st.error("Code d'accès incorrect.")
+      else:
+        st.error("Impossible de récupérer les utilisateurs.")
 
-# INTERFACE SELON LE RÔLE
+# --- INTERFACE SELON LE RÔLE ---
 else:
   user = st.session_state.user
   st.sidebar.write(f"👤 **{user['Nom']}**")
   st.sidebar.write(f"🔑 Rôle : *{user['Role']}*")
 
   if st.sidebar.button("Se déconnecter"):
+    # Libérer le code à la déconnexion
+    code_actuel = str(user.get("Code"))
+    if code_actuel in st.session_state.active_codes:
+      st.session_state.active_codes.remove(code_actuel)
+
     st.session_state.user = None
     st.rerun()
 
@@ -135,6 +181,8 @@ else:
           st.success(
               f"✅ Extincteur **{id_scanne}** mis à jour : **{nouveau_statut}**"
           )
+          if nouveau_statut == "Vide":
+            st.warning("📩 Un e-mail d'alerte a été envoyé au gestionnaire.")
         else:
           st.warning(f"⚠️ Cet extincteur est déjà au statut '{statut_actuel}'.")
       else:
@@ -147,39 +195,39 @@ else:
     choix_action = st.radio(
         "Action :",
         (
-            "Récupérer des extincteurs vides",
-            "Déposer des extincteurs rechargés",
+            "Récupérer des extincteurs (Lot)",
+            "Déposer / Rendre Plein (Scan individuel)",
         ),
     )
 
     if "Récupérer" in choix_action:
       vides = df_ext[df_ext["Statut"] == "Vide"]
       nb_vides = len(vides)
-      st.info(f"📦 Il y a **{nb_vides}** extincteur(s) vide(s).")
+      st.info(f"📦 Extincteurs actuellement marqués 'Vide' : **{nb_vides}**")
 
-      if nb_vides > 0:
-        quantite = st.number_input(
-            "Combien en emportez-vous ?",
-            min_value=1,
-            max_value=nb_vides,
-            value=nb_vides,
-        )
-        if st.button("Valider le départ"):
-          date_du_jour = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-          indices_vides = df_ext[df_ext["Statut"] == "Vide"].index[
-              :int(quantite)
-          ]
-          for idx in indices_vides:
-            ext_id = df_ext.loc[idx, "ID_Extincteur"]
-            update_sheet(ext_id, "En rechargement", user["Nom"], date_du_jour)
+      quantite_a_prendre = st.number_input(
+          "Combien d'extincteurs le prestataire emporte-t-il ?",
+          min_value=1,
+          max_value=100,
+          value=max(1, nb_vides),
+      )
+
+      if st.button("Valider le départ du lot"):
+        date_du_jour = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        res = update_batch(quantite_a_prendre, user["Nom"], date_du_jour)
+        if res and res.get("status") == "success":
           st.success(
-              f"🚀 Départ validé pour {len(indices_vides)} extincteur(s)."
+              f"🚀 Départ validé pour {res.get('count')} extincteur(s). Un"
+              " e-mail de suivi a été envoyé au gestionnaire."
           )
-      else:
-        st.warning("Aucun extincteur vide.")
+          st.rerun()
+
     else:
-      st.write("Scannez pour rendre **Plein**.")
-      id_scanne_retour = qrcode_scanner(key="scanner_prestataire")
+      st.write(
+          "Scannez individuellement chaque extincteur de retour pour le"
+          " basculer en **Plein**."
+      )
+      id_scanne_retour = qrcode_scanner(key="scanner_prestataire_retour")
 
       if id_scanne_retour:
         st.info(f"🔍 QR Code détecté : **{id_scanne_retour}**")
@@ -190,15 +238,16 @@ else:
 
         if mask.any():
           statut_actuel = df_ext.loc[mask, "Statut"].values[0]
-          if statut_actuel == "En rechargement":
+          if statut_actuel in ["En rechargement", "Vide"]:
             date_du_jour = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             update_sheet(
                 id_scanne_retour, "Plein", user["Nom"], date_du_jour
             )
             st.success(
-                f"✅ Extincteur **{id_scanne_retour}** de retour (**Plein**)."
+                f"✅ Extincteur **{id_scanne_retour}** de retour et basculé en"
+                " **Plein** !"
             )
           else:
-            st.warning(f"⚠️ Statut actuel non valide : {statut_actuel}")
+            st.warning(f"⚠️ Cet extincteur est déjà au statut : {statut_actuel}")
         else:
           st.error("❌ ID introuvable.")
