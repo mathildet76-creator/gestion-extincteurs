@@ -76,7 +76,7 @@ if "user" not in st.session_state:
 
 # AUTHENTIFICATION
 if st.session_state.user is None:
-  st.image("https://drive.google.com/file/d/12y2T4SnZlshfV5_FwQU_WoU7TYrPPCsC/view?usp=sharing")
+  st.image("https://drive.google.com/file/d/12y2T4SnZlshfV5_FwQU_WoU7TYrPPCsC/view?usp=drive_link")
   st.title("Connexion")
   code_saisi = st.text_input("Code d'accès", type="password")
 
